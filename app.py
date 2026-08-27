@@ -320,9 +320,14 @@ def add_account():
 
     conn = sqlite3.connect("expenses.db")
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO accounts (account_name, balance) VALUES (?, ?)", (name, balance))
-    conn.commit()
-    conn.close()
+    try:
+        cursor.execute("INSERT INTO accounts (account_name, balance) VALUES (?, ?)", (name, balance))
+        conn.commit()
+    except sqlite3.IntegrityError:
+        
+        pass
+    finally:
+        conn.close()
 
     return redirect(url_for("home"))
 
